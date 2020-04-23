@@ -20,6 +20,12 @@ Windows
 > pip install -r requirements.txt
 ```
 
+Para rodar o Streamlit:
+```bash
+> streamlit run alunos.py
+```
+
+
 Quando finalizado, você pode desativar o ambiente virtual do virtualenv com:
 
 ```bash
