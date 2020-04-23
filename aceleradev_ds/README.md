@@ -22,7 +22,7 @@ Windows
 
 Para rodar o Streamlit:
 ```bash
-> streamlit run alunos.py
+> streamlit run *nome_do_arquivo*.py
 ```
 
 
