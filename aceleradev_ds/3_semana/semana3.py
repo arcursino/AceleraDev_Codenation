@@ -97,23 +97,23 @@ def main():
 
         histograma = st.checkbox('Histograma')
         if histograma:
-            col_num = st.selectbox('Selecione a Coluna Numérica: ', colunas_numericas, key = 'unique')
+            col_num = st.selectbox('Selecione a Coluna Numérica: ', colunas_numericas)
             st.markdown('Histograma da coluna: ' + str(col_num))
             st.write(criar_histograma(col_num, df))
         
         barras = st.checkbox('Gráfico de Barras')
         if barras:
-            col_num_barras = st.selectbox('Selecione a Coluna numérica: ', colunas_numericas, key = 'unique')
-            col_cat_barras = st.selectbox('Selecione uma Coluna categórica: ', colunas_object, key = 'unique')
+            col_num_barras = st.selectbox('Selecione a Coluna numérica: ', colunas_numericas)
+            col_cat_barras = st.selectbox('Selecione uma Coluna categórica: ', colunas_object)
             st.markdown('Gráfico de barras da coluna ' + str(col_cat_barras + ' pela coluna ' + col_num_barras))
             st.write(criar_barras(col_num_barras, col_cat_barras, df))
 
         boxplot = st.checkbox('Boxplot')
         if boxplot:
-            col_num_box = st.selectbox('Selecione a Coluna numérica: ', colunas_numericas, key = 'unique')
-            col_cat_box = st.selectbox('Selecione uma Coluna categórica: ', colunas_object, key = 'unique')    
+            col_num_box = st.selectbox('Selecione a Coluna numérica: ', colunas_numericas)
+            col_cat_box = st.selectbox('Selecione uma Coluna categórica: ', colunas_object)    
             st.markdown('Boxplot ' + str(col_cat_box) + ' pela coluna ' + col_num_box)          
-            #st.write(criar_boxplot(col_num_box, col_cat_box, df)) 
+            st.write(criar_boxplot(col_num_box, col_cat_box, df)) 
 
 if __name__ == '__main__':
 	main()
