@@ -1,1 +1,1 @@
-web: sh setup.sh && streamlit run desafio_codenation.py
+web: sh setup.sh && streamlit run desafio-codenation-week3.py
