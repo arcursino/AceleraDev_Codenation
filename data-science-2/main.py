@@ -11,7 +11,7 @@
 
 # ## _Setup_ geral
 
-# In[1]:
+# In[17]:
 
 
 import pandas as pd
@@ -19,8 +19,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import scipy.stats as sct
 import seaborn as sns
+import statsmodels.api as sm 
 
-# In[2]:
+# In[18]:
 
 
 %matplotlib inline
@@ -32,12 +33,12 @@ figsize(12, 8)
 
 sns.set()
 
-# In[3]:
+# In[19]:
 
 
 athletes = pd.read_csv("athletes.csv")
 
-# In[4]:
+# In[20]:
 
 
 def get_sample(df, col_name, n=100, seed=42):
@@ -72,37 +73,47 @@ def get_sample(df, col_name, n=100, seed=42):
 
 # ## Inicia sua análise a partir daqui
 
-# In[5]:
+# In[21]:
 
 
 # Sua análise começa aqui.
 
 
-# In[ ]:
+# In[22]:
 
 
 athletes.head()
 
-# In[ ]:
+# In[23]:
 
 
 athletes.shape
 
-# In[ ]:
+# In[24]:
 
 
 athletes.info()
+
+# In[25]:
+
+
+athletes.describe()
 
 # ## Questão 1
 # 
 # Considerando uma amostra de tamanho 3000 da coluna `height` obtida com a função `get_sample()`, execute o teste de normalidade de Shapiro-Wilk com a função `scipy.stats.shapiro()`. Podemos afirmar que as alturas são normalmente distribuídas com base nesse teste (ao nível de significância de 5%)? Responda com um boolean (`True` ou `False`).
 
-# In[6]:
+# In[26]:
+
+
+sample_height = get_sample(athletes, 'height', n=3000)
+
+# In[27]:
 
 
 def q1():
     # Teste de normalidade:
-    stat,p = sct.shapiro(sample)
+    stat,p = sct.shapiro(sample_height)
 
     # Interpretação:
     alpha = 0.05
@@ -110,6 +121,8 @@ def q1():
         return True
     else:
         return False
+
+q1()
 
 # __Para refletir__:
 # 
@@ -117,16 +130,27 @@ def q1():
 # * Plote o qq-plot para essa variável e a analise.
 # * Existe algum nível de significância razoável que nos dê outro resultado no teste? (Não faça isso na prática. Isso é chamado _p-value hacking_, e não é legal).
 
+# In[28]:
+
+
+plt.hist(sample_height, bins=25)
+plt.show
+
+# In[16]:
+
+
+sm.qqplot(sample_height, fit=True, line="45")
+
 # ## Questão 2
 # 
 # Repita o mesmo procedimento acima, mas agora utilizando o teste de normalidade de Jarque-Bera através da função `scipy.stats.jarque_bera()`. Agora podemos afirmar que as alturas são normalmente distribuídas (ao nível de significância de 5%)? Responda com um boolean (`True` ou `False`).
 
-# In[7]:
+# In[29]:
 
 
 def q2():
     # Teste de normalidade:
-    stat,p = sct.jarque_bera(sample)
+    stat,p = sct.jarque_bera(sample_height)
 
     # Interpretação:
     alpha = 0.05
@@ -134,6 +158,7 @@ def q2():
         return True
     else:
         return False
+q2()
 
 # __Para refletir__:
 # 
@@ -143,18 +168,17 @@ def q2():
 # 
 # Considerando agora uma amostra de tamanho 3000 da coluna `weight` obtida com a função `get_sample()`. Faça o teste de normalidade de D'Agostino-Pearson utilizando a função `scipy.stats.normaltest()`. Podemos afirmar que os pesos vêm de uma distribuição normal ao nível de significância de 5%? Responda com um boolean (`True` ou `False`).
 
-# In[ ]:
+# In[30]:
 
 
-# Amostra:
-new_sample = get_sample(athletes,'weight', n=3000)
+sample_weight = get_sample(athletes,'weight', n=3000)
 
-# In[8]:
+# In[31]:
 
 
 def q3():
     # Teste de normalidade:
-    stat,p = sct.normaltest(new_sample)
+    stat,p = sct.normaltest(sample_weight)
 
     # Interpretação:
     alpha = 0.05
@@ -162,27 +186,41 @@ def q3():
         return True
     else:
         return False
+
+q3()
 
 # __Para refletir__:
 # 
 # * Plote o histograma dessa variável (com, por exemplo, `bins=25`). A forma do gráfico e o resultado do teste são condizentes? Por que?
 # * Um _box plot_ também poderia ajudar a entender a resposta.
 
+# In[32]:
+
+
+plt.hist(sample_weight, bins=25)
+plt.show
+
+# In[33]:
+
+
+plt.boxplot(sample_weight)
+plt.show
+
 # ## Questão 4
 # 
 # Realize uma transformação logarítmica em na amostra de `weight` da questão 3 e repita o mesmo procedimento. Podemos afirmar a normalidade da variável transformada ao nível de significância de 5%? Responda com um boolean (`True` ou `False`).
 
+# In[34]:
+
+
+sample_weight_log = np.log(sample_weight)
+
 # In[ ]:
 
 
-new_sample_log = np.log(new_sample)
-
-# In[9]:
-
-
 def q4():
-    # Refazendo o teste de D'Agostino-Pearson:
-    stat,p = sct.normaltest(new_sample_log)
+    # Teste de normalidade transformada:
+    stat,p = sct.normaltest(sample_weight_log)
 
     # Interpretação:
     alpha = 0.05
@@ -191,10 +229,18 @@ def q4():
     else:
         return False
 
+q4()
+
 # __Para refletir__:
 # 
 # * Plote o histograma dessa variável (com, por exemplo, `bins=25`). A forma do gráfico e o resultado do teste são condizentes? Por que?
 # * Você esperava um resultado diferente agora?
+
+# In[35]:
+
+
+plt.hist(sample_weight_log, bins=25 )
+plt.show
 
 # > __Para as questão 5 6 e 7 a seguir considere todos testes efetuados ao nível de significância de 5%__.
 
@@ -202,7 +248,7 @@ def q4():
 # 
 # Obtenha todos atletas brasileiros, norte-americanos e canadenses em `DataFrame`s chamados `bra`, `usa` e `can`,respectivamente. Realize um teste de hipóteses para comparação das médias das alturas (`height`) para amostras independentes e variâncias diferentes com a função `scipy.stats.ttest_ind()` entre `bra` e `usa`. Podemos afirmar que as médias são estatisticamente iguais? Responda com um boolean (`True` ou `False`).
 
-# In[ ]:
+# In[36]:
 
 
 # Criando os dataframes:
@@ -210,7 +256,7 @@ bra = athletes[athletes.nationality == 'BRA']
 usa = athletes[athletes.nationality == 'USA']
 can = athletes[athletes.nationality == 'CAN']
 
-# In[10]:
+# In[ ]:
 
 
 def q5():
@@ -224,11 +270,13 @@ def q5():
     else:
         return False
 
+q5()
+
 # ## Questão 6
 # 
 # Repita o procedimento da questão 5, mas agora entre as alturas de `bra` e `can`. Podemos afimar agora que as médias são estatisticamente iguais? Reponda com um boolean (`True` ou `False`).
 
-# In[11]:
+# In[37]:
 
 
 def q6():
@@ -242,11 +290,13 @@ def q6():
     else:
         return False
 
+q6()
+
 # ## Questão 7
 # 
 # Repita o procedimento da questão 6, mas agora entre as alturas de `usa` e `can`. Qual o valor do p-valor retornado? Responda como um único escalar arredondado para oito casas decimais.
 
-# In[12]:
+# In[38]:
 
 
 def q7():
@@ -255,6 +305,8 @@ def q7():
 
     # Valor de p-value:
     return float(round(usa_can[1],8))
+
+q7()
 
 # __Para refletir__:
 # 
