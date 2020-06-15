@@ -31,3 +31,15 @@ Quando finalizado, você pode desativar o ambiente virtual do virtualenv com:
 ```bash
 $ deactivate
 ```
+
+Para quem usa Docker
+
+```bash
+$ make start
+```
+Para parar o Docker
+
+```bash
+$ docker ps
+$ docker stop "container"
+```
